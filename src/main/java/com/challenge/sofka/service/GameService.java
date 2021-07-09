@@ -80,6 +80,16 @@ public class GameService {
   }
 
   private void resultsRace() {
+    List<String> allDriversMoves = mapResults();
+    int lenght = allDriversMoves.size() - 1;
+    List<String> podium = new ArrayList<>(0);
+    for (int i = 0; i <= 2; i++) {
+      podium.add(allDriversMoves.get(lenght - i));
+    }
+    this.race.setPodium(podium);
+  }
+
+  private List<String> mapResults() {
     Map<String, Integer> results = new HashMap<>();
     for (int i = 0; i < this.race.getDrivers().size(); i++) {
       results.put(this.race.getDrivers().get(i).getName(), totalMove(this.turn.get(i)));
@@ -88,7 +98,7 @@ public class GameService {
     results.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach((p) -> {
       reversedResults.add(p.toString());
     });
-    this.race.setPodium(reversedResults);
+    return reversedResults;
   }
 
 }

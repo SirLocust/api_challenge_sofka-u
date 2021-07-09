@@ -34,7 +34,6 @@ public class Driver {
   @ManyToMany(cascade = { CascadeType.ALL })
   private List<Race> races;
 
-  // @Column(nullable = )
   @OneToOne(cascade = { CascadeType.ALL })
   @JoinColumn(name = "ID_CAR")
   private Car car;

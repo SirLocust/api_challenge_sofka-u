@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.challenge.sofka.entity.Race;
-import com.challenge.sofka.entity.Speedway;
+
 import com.challenge.sofka.service.GameService;
 import com.challenge.sofka.service.RaceService;
 
@@ -18,10 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.AllArgsConstructor;
-
 @RestController
-// @AllArgsConstructor
+
 @RequestMapping(value = "/game")
 public class GameController {
 
@@ -48,11 +46,32 @@ public class GameController {
 
   @PostMapping
   public ResponseEntity<Map<String, Object>> createGame(@RequestBody Race race) {
+    Map<String, Object> errors = this.checkRaceCorrect(race);
+    if (errors != null) {
+      return ResponseEntity.badRequest().body(errors);
+    }
     race.setStatus("START");
     Race raceDb = this.raceService.setRace(race);
     Map<String, Object> body = new HashMap<>();
     body.put("Id", raceDb.getId().toString());
     body.put("Message", "Juego Iniciado");
     return ResponseEntity.status(HttpStatus.CREATED).body(body);
+  }
+
+  private Map<String, Object> checkRaceCorrect(Race race) {
+    Map<String, Object> message = new HashMap<>();
+    if (race.getSpeedway() == null || race.getSpeedway().getDistance() <= 0) {
+      message.put("Error", "Es necesario enviar una pista y que la distancia de esta sea mayor a 0");
+      return message;
+    }
+    if (race.getDrivers() == null || race.getDrivers().size() < 3) {
+      message.put("Error", "Es necesario enviar los conductores y que sean Tres conductores o más ");
+      return message;
+    }
+    if (race.getDrivers().size() != race.getSpeedway().getHowManylanes()) {
+      message.put("Error", "El número de carriles y el número de conductores debe ser igual");
+      return message;
+    }
+    return null;
   }
 }
