@@ -1,19 +1,13 @@
 package com.challenge.sofka.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 import com.challenge.sofka.entity.Driver;
 import com.challenge.sofka.entity.Race;
 import com.challenge.sofka.model.Dice;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
@@ -26,20 +20,18 @@ import lombok.Data;
 @AllArgsConstructor
 public class GameService {
 
-  private List<List<Integer>> turn = new ArrayList<>();
-  private List<Integer> pos = new ArrayList();
+  private List<List<Integer>> turn = null;
   private final Dice dice;
-  @Autowired
   private Race race;
 
   public void setUpGame(Race race) {
     this.race = race;
+    this.turn = new ArrayList<>();
   }
 
   public Race initGame() {
     this.race.setStatus("PLAY");
     for (int i = 0; i < this.race.getDrivers().size(); i++) {
-
       this.turn.add(new ArrayList<>());
     }
     return run();
@@ -52,7 +44,6 @@ public class GameService {
         break;
       }
     }
-    // System.out.println(Arrays.toString(this.turn.toArray()));
     this.resultsRace();
     this.race.setTurns(this.turn);
     return this.race;
@@ -66,16 +57,11 @@ public class GameService {
         this.race.setStatus("FINISH");
         break;
       }
-      System.out.println(this.totalMove(this.turn.get(i)) + "--" + i);
-
     }
-
-    System.out.println("___________________");
   }
 
   private Integer move() {
     return dice.throwNumber() * 100;
-
   }
 
   private Integer totalMove(List<Integer> moves) {
@@ -94,22 +80,15 @@ public class GameService {
   }
 
   private void resultsRace() {
-    HashMap<String, Integer> results = new HashMap<>();
+    Map<String, Integer> results = new HashMap<>();
     for (int i = 0; i < this.race.getDrivers().size(); i++) {
       results.put(this.race.getDrivers().get(i).getName(), totalMove(this.turn.get(i)));
     }
-    List<Map.Entry<String, Integer>> reversedResults = new ArrayList<>();
+    List<String> reversedResults = new ArrayList<>();
     results.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach((p) -> {
-      reversedResults.add(p);
-      System.out.println(p);
+      reversedResults.add(p.toString());
     });
-
-    // for (String key : results.keySet()) {
-    // reversedResults.add(key + " : " + results.get(key).toString());
-    // }
-
     this.race.setPodium(reversedResults);
-
   }
 
 }

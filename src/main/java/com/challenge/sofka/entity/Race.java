@@ -13,7 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -38,17 +39,20 @@ public class Race {
   @JoinColumn(name = "ID_SPEEDWAY")
   private Speedway speedway;
 
-  @OneToMany(cascade = { CascadeType.ALL })
-  @JoinColumn(name = "ID_DRIVER")
+  @ManyToMany(cascade = { CascadeType.ALL })
+  // @JoinColumn(name = "ID_DRIVER")
+  @JoinTable(name = "RACE_DRIVER", joinColumns = @JoinColumn(name = "ID_RACE"), inverseJoinColumns = @JoinColumn(name = "ID_DRIVER"))
+  // @ElementCollection(targetClass = ArrayList.class)
   private List<Driver> drivers;
 
   private String status;
+
   @Column(name = "TURNS")
   @ElementCollection(targetClass = ArrayList.class)
   private List<List<Integer>> turns;
 
   @ElementCollection(targetClass = ArrayList.class)
 
-  private List<Map.Entry<String, Integer>> podium;
+  private List<String> podium;
 
 }
