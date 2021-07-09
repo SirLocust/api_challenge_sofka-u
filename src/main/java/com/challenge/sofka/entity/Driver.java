@@ -8,11 +8,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Entity
 @Table(name = "DRIVERS")
 @Data
+@AllArgsConstructor
 public class Driver {
 
   @Id

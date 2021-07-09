@@ -18,10 +18,11 @@ public class RaceService {
     Speedway speedway = new Speedway();
     speedway.setDistance(4000);
     speedway.setHowManylanes(4);
-    drivers.add(new Driver());
-    drivers.add(new Driver());
-    drivers.add(new Driver());
-    drivers.add(new Driver());
+
+    drivers.add(new Driver(234L, "driver1", null));
+    drivers.add(new Driver(2335L, "driver2", null));
+    drivers.add(new Driver(231L, "driver3", null));
+    drivers.add(new Driver(235L, "driver4", null));
     race.setDrivers(drivers);
     race.setSpeedway(speedway);
 

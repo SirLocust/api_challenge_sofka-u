@@ -1,8 +1,8 @@
 package com.challenge.sofka.model;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class Dice {
 
   public int throwNumber() {
